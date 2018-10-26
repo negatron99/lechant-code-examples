@@ -19,8 +19,12 @@ int printTotal(char);
 
 int main(){
 	iniSeats();
-	displaySeats();
-	promptSeats();
+
+	while (true) {
+	    system("CLS");
+	    displaySeats();
+	    promptSeats();
+	}
 }
 
 void iniSeats(){
@@ -53,40 +57,45 @@ void displaySeats(){
 void promptSeats(){
 	char rowNo;
 	int seatNo,rowNoInt;
-	cout<<left<<setw(25)<<"please enter seat row(A-J):";
-	cin>>rowNo;
-	rowNoInt=static_cast<int>(rowNo);          
-	if(rowNoInt<=106&&rowNoInt>=97){
-		rowNoInt-=32;                         //detects and turns lower case to upper case
-	}
-	if(rowNoInt>74||rowNoInt<65){
-	   cout<<"invalid value entered"<<endl;      //filter to ensure only two ranges of values can be valid
-	   promptSeats();	
-	}
-	do{
-		cout<<left<<setw(25)<<"please enter seat number(1-14):";
-	    cin>>seatNo;
-	    if(seatNo<1||seatNo>14){
-	    	cout<<"invalid Value entered"<<endl;      //filter and do while loop to prevent user having to reset row 
-		}
-	}while(seatNo<1||seatNo>14);
-	
-	rowNoInt-=65;                                    //turns char to int value to 0+position in alphabates to be used to identify position in array
-	
-	if(map[rowNoInt][(seatNo-1)]==VACANT){
-		bookSeats(rowNoInt,seatNo);
-		cout<<"seat available, booking sucessful"<<endl;
-	    printTotal(rowNo);                              //checks to see if a seat is vacant if yes, total price is incremented, if no booking is rejected
-	     system("CLS");
-	    displaySeats();
-	    promptSeats();
-	}
-	else{
-		system("CLS");
-		displaySeats();
-		cout<<"seat is taken, please pick another seat"<<endl;
-		promptSeats();
-	}
+
+	do {
+
+        do {
+            cout<<left<<setw(25)<<"please enter seat row(A-J):";
+            cin>>rowNo;
+
+            rowNoInt=static_cast<int>(rowNo);
+            if(rowNoInt<=106&&rowNoInt>=97){
+                rowNoInt-=32;                         //detects and turns lower case to upper case
+            }
+
+            if(rowNoInt>74||rowNoInt<65){
+               cout<<"invalid value entered"<<endl;      //filter to ensure only two ranges of values can be valid
+            }
+        } while (rowNoInt>74||rowNoInt<65);
+
+        do{
+            cout<<left<<setw(25)<<"please enter seat number(1-14):";
+            cin>>seatNo;
+            if(seatNo<1||seatNo>14){
+                cout<<"invalid Value entered"<<endl;      //filter and do while loop to prevent user having to reset row
+            }
+        } while (seatNo<1||seatNo>14);
+
+        rowNoInt-=65;                                    //turns char to int value to 0+position in alphabates to be used to identify position in array
+
+        if(map[rowNoInt][(seatNo-1)]!=VACANT){
+            system("CLS");
+            displaySeats();
+            cout<<"seat is taken, please pick another seat"<<endl;
+        }
+
+	} while (map[rowNoInt][(seatNo-1)]!=VACANT); // keep going until the seat is vacant
+
+    bookSeats(rowNoInt,seatNo);
+    cout<<"seat available, booking successful"<<endl;
+    printTotal(rowNo); //checks to see if a seat is vacant if yes, total price is incremented, if no booking is rejected
+
 }
 
 void bookSeats(int rowNoInt,int seatNo){
